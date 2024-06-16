@@ -6,25 +6,40 @@ body {
     max-width: 800px;
     margin: 0 auto;
     padding: 20px;
-    text-align: center;
 }
 
 .input-group {
     display: flex;
-    align-items: center;
+    flex-wrap: wrap;
     justify-content: center;
     margin: 10px 0;
 }
 
-label {
-    margin-right: 10px;
+.input-group label {
+    margin: 10px;
 }
 
-input, select {
-    width: 100px;
+input[type="number"], select {
+    width: calc(33.33% - 20px);
     padding: 10px;
     font-size: 16px;
-    margin-right: 10px;
+    margin: 10px;
+}
+
+#width, #height {
+    width: calc(50% - 20px);
+}
+
+button {
+    padding: 15px 20px;
+    font-size: 16px;
+    margin: 10px 5px;
+    cursor: pointer;
+}
+
+button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
 }
 
 #result-container {
@@ -46,17 +61,6 @@ input, select {
 .table-row span,
 .table-row button {
     margin-left: 10px;
-}
-
-button {
-    padding: 10px 15px;
-    margin-top: 10px;
-    cursor: pointer;
-}
-
-button:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
 }
 
 #copy-table {
