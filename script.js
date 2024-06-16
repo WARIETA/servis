@@ -1,49 +1,180 @@
+// Event listeners for adding doors/windows
 document.getElementById('add-window').addEventListener('click', function() {
-    const width = parseFloat(document.getElementById('width').value);
-    const height = parseFloat(document.getElementById('height').value);
+    addDoor('Okno');
+});
+
+document.getElementById('add-balcony').addEventListener('click', function() {
+    addDoor('Bal');
+});
+
+document.getElementById('add-sliding').addEventListener('click', function() {
+    addDoor('Posuvné');
+});
+
+document.getElementById('add-entrance').addEventListener('click', function() {
+    addDoor('Vchodovky');
+});
+
+document.getElementById('copy-table').addEventListener('click', function() {
+    copyTable();
+});
+
+// Function to add a door with specified type
+function addDoor(type) {
+    const widthInput = document.getElementById('width');
+    const heightInput = document.getElementById('height');
+    const windowType = document.getElementById('window-type').value;
+    const hardwareType = document.getElementById('hardware-type').value;
+    const sealType = document.getElementById('seal-type').value;
+
+    const width = parseFloat(widthInput.value);
+    const height = parseFloat(heightInput.value);
 
     if (isNaN(width) || isNaN(height) || width <= 0 || height <= 0) {
         alert('Prosím zadejte platné rozměry.');
         return;
     }
 
-    const perimeter = 2 * (width + height) / 100; // Convert to meters
-    const table = document.getElementById('result-table').getElementsByTagName('tbody')[0];
+    let perimeter;
+    if (windowType === 'plastic') {
+        perimeter = 4 * (width + height) / 100; // 4x for plastic windows
+    } else if (windowType === 'wood') {
+        perimeter = 2 * (width + height) / 100; // 2x for wooden windows
+    }
 
-    const newRow = table.insertRow();
-    newRow.insertCell(0).textContent = 'OKNO';
-    newRow.insertCell(1).textContent = `${width} x ${height}`;
-    newRow.insertCell(2).textContent = '1';
-    newRow.insertCell(3).textContent = perimeter.toFixed(2);
-    newRow.insertCell(4).textContent = perimeter.toFixed(2);
+    const resultContainer = document.getElementById('result-container');
+    const totalContainer = document.getElementById('total-perimeter');
 
-    const actionCell = newRow.insertCell(5);
-    const increaseButton = document.createElement('button');
-    increaseButton.textContent = '+';
-    increaseButton.addEventListener('click', function() {
-        const countCell = newRow.cells[2];
-        const currentCount = parseInt(countCell.textContent, 10);
-        countCell.textContent = currentCount + 1;
-        updateRow(newRow, width, height, currentCount + 1);
-    });
+    // Clear input fields
+    widthInput.value = '';
+    heightInput.value = '';
 
-    const decreaseButton = document.createElement('button');
-    decreaseButton.textContent = '-';
-    decreaseButton.addEventListener('click', function() {
-        const countCell = newRow.cells[2];
-        const currentCount = parseInt(countCell.textContent, 10);
-        if (currentCount > 1) {
-            countCell.textContent = currentCount - 1;
-            updateRow(newRow, width, height, currentCount - 1);
+    // Check if header exists for the type
+    let tableHeader = document.getElementById(`${type}-header`);
+    if (!tableHeader) {
+        tableHeader = document.createElement('div');
+        tableHeader.id = `${type}-header`;
+        tableHeader.textContent = `${type}`;
+        resultContainer.appendChild(tableHeader);
+    }
+
+    // Find the last row of this type to insert after
+    let lastRowOfType = null;
+    const rows = resultContainer.querySelectorAll('.table-row');
+    rows.forEach(row => {
+        if (row.getAttribute('data-type') === type) {
+            lastRowOfType = row;
         }
     });
 
-    actionCell.appendChild(increaseButton);
-    actionCell.appendChild(decreaseButton);
-});
+    const newRow = document.createElement('div');
+    newRow.classList.add('table-row');
+    newRow.setAttribute('data-type', type);
+    newRow.innerHTML = `
+        <div class="dimensions">
+            ${width}x${height}
+        </div>
+        <div class="details">
+            <span class="count">1x</span> 
+            <span class="perimeter">${perimeter.toFixed(1)}m</span> 
+            (<span class="total-perimeter">${perimeter.toFixed(1)}m</span>) 
+            <button class="increase">+</button> 
+            <button class="decrease">-</button>
+        </div>
+    `;
 
-function updateRow(row, width, height, count) {
-    const perimeter = 2 * (width + height) / 100;
-    row.cells[3].textContent = perimeter.toFixed(2);
-    row.cells[4].textContent = (perimeter * count).toFixed(2);
+    // Insert new row after the last row of this type
+    if (lastRowOfType) {
+        lastRowOfType.parentNode.insertBefore(newRow, lastRowOfType.nextSibling);
+    } else {
+        resultContainer.appendChild(newRow);
+    }
+
+    const increaseButton = newRow.querySelector('.increase');
+    const decreaseButton = newRow.querySelector('.decrease');
+    const countElement = newRow.querySelector('.count');
+    const perimeterElement = newRow.querySelector('.perimeter');
+    const totalPerimeterElement = newRow.querySelector('.total-perimeter');
+
+    function updateTotal() {
+        let total = 0;
+        resultContainer.querySelectorAll('.total-perimeter').forEach(function(el) {
+            total += parseFloat(el.textContent);
+        });
+        totalContainer.textContent = `${total.toFixed(1)}m`;
+    }
+
+    increaseButton.addEventListener('click', function() {
+        const currentCount = parseInt(countElement.textContent);
+        countElement.textContent = `${currentCount + 1}x`;
+        updateRow(currentCount + 1);
+        updateTotal();
+    });
+
+    decreaseButton.addEventListener('click', function() {
+        const currentCount = parseInt(countElement.textContent);
+        if (currentCount > 1) {
+            countElement.textContent = `${currentCount - 1}x`;
+            updateRow(currentCount - 1);
+            updateTotal();
+        } else if (currentCount === 1) {
+            if (confirm('Opravdu chcete odstranit tento řádek?')) {
+                resultContainer.removeChild(newRow);
+                updateTotal();
+            }
+        }
+    });
+
+    function updateRow(count) {
+        totalPerimeterElement.textContent = `${(perimeter * count).toFixed(1)}m`;
+    }
+
+    updateTotal();
+}
+
+// Function to copy table
+function copyTable() {
+    const resultContainer = document.getElementById('result-container');
+    const totalPerimeter = document.getElementById('total-perimeter').textContent;
+    const windowType = document.getElementById('window-type').value;
+    const hardwareType = document.getElementById('hardware-type').value;
+    const sealType = document.getElementById('seal-type').value;
+    const rows = resultContainer.querySelectorAll('.table-row');
+    let copyText = '';
+
+    // Determine service type based on window type
+    const serviceType = windowType === 'plastic' ? 'PLAST' : 'DŘEVO';
+
+    // Add header with serviceType, hardwareType, and sealType
+    copyText += `servis ${serviceType}. Typ kování - ${hardwareType}. Typ těsnění - ${sealType}\n`;
+
+    let lastType = null;
+    rows.forEach((row, index) => {
+        const type = row.getAttribute('data-type');
+        if (type && type !== lastType) {
+            if (index !== 0) {
+                copyText += '\n'; // Add newline between different segments
+            }
+            copyText += `${type}\n`;
+            lastType = type;
+        }
+        const dimensions = row.querySelector('.dimensions').textContent.trim();
+        const count = row.querySelector('.count').textContent.trim();
+        const perimeter = row.querySelector('.perimeter').textContent.trim();
+        const totalPerimeter = row.querySelector('.total-perimeter').textContent.trim();
+        copyText += ` ${dimensions} ${count} ${perimeter} (${totalPerimeter})\n`;
+    });
+    copyText += `\nDohromady ${totalPerimeter}`;
+
+    const textarea = document.createElement('textarea');
+    textarea.value = copyText;
+    document.body.appendChild(textarea);
+    textarea.select();
+    try {
+        document.execCommand('copy');
+        alert('Tabulka byla zkopírována do schránky.');
+    } catch (err) {
+        alert('Kopírování se nezdařilo. Zkuste to znovu.');
+    }
+    document.body.removeChild(textarea);
 }

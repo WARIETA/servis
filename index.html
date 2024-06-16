@@ -9,6 +9,8 @@
 <body>
     <div class="container">
         <h1>Výpočet obvodu rámu oken</h1>
+        
+        <!-- Inputs for width, height, and window type -->
         <div class="input-group">
             <label for="width">Šířka (cm):</label>
             <input type="number" id="width">
@@ -17,23 +19,60 @@
             <label for="height">Výška (cm):</label>
             <input type="number" id="height">
         </div>
-        <button id="add-window">OKNO</button>
-        <table id="result-table">
-            <thead>
-                <tr>
-                    <th>Typ</th>
-                    <th>Rozměry (cm)</th>
-                    <th>Počet</th>
-                    <th>Obvod (m)</th>
-                    <th>Celkový obvod (m)</th>
-                    <th>Akce</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Rows will be added here dynamically -->
-            </tbody>
-        </table>
+        <div class="input-group">
+            <label for="window-type">Typ okna:</label>
+            <select id="window-type">
+                <option value="plastic">Plastová okna</option>
+                <option value="wood">Dřevěná okna</option>
+            </select>
+        </div>
+        
+        <!-- New dropdown for "Typ kování" -->
+        <div class="input-group">
+            <label for="hardware-type">Typ kování:</label>
+            <select id="hardware-type">
+                <option value="ROTO">ROTO</option>
+                <option value="MACO">MACO</option>
+                <option value="SI">SI</option>
+                <option value="WINK HAUS">WINK HAUS</option>
+                <option value="doplnit">doplnit</option>
+            </select>
+        </div>
+        
+        <!-- New dropdown for "Typ těsnění" -->
+        <div class="input-group">
+            <label for="seal-type">Typ těsnění:</label>
+            <select id="seal-type">
+                <option value="Černé Nenalepené">Černé Nenalepené</option>
+                <option value="Černé nalepené">Černé nalepené</option>
+                <option value="Šedé Nenalepené">Šedé Nenalepené</option>
+                <option value="Šedé nalepené">Šedé nalepené</option>
+                <option value="Hnědé Nenalepené">Hnědé Nenalepené</option>
+                <option value="Hnědé nalepené">Hnědé nalepené</option>
+            </select>
+        </div>
+        
+        <!-- Buttons to add different types of doors/windows -->
+        <button id="add-window">Přidat okno</button>
+        <button id="add-balcony">Přidat balkónové dveře</button>
+        <button id="add-sliding">Přidat posuvné dveře</button>
+        <button id="add-entrance">Přidat vchodové dveře</button>
+        
+        <!-- Button to copy the table -->
+        <button id="copy-table">Kopírovat tabulku</button>
+        
+        <!-- Container for dynamically added rows -->
+        <div id="result-container">
+            <!-- Tabulka bude přidána dynamicky -->
+        </div>
+        
+        <!-- Container for total perimeter -->
+        <div id="total-container">
+            <strong>Dohromady:</strong> <span id="total-perimeter">0m</span>
+        </div>
     </div>
+    
+    <!-- Link to external JavaScript file -->
     <script src="script.js"></script>
 </body>
 </html>
