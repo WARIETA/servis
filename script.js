@@ -1,4 +1,4 @@
-// Event listeners for adding doors/windows
+// Event listeners for adding doors
 document.getElementById('add-window').addEventListener('click', function() {
     addDoor('Okno');
 });
@@ -24,8 +24,6 @@ function addDoor(type) {
     const widthInput = document.getElementById('width');
     const heightInput = document.getElementById('height');
     const windowType = document.getElementById('window-type').value;
-    const hardwareType = document.getElementById('hardware-type').value;
-    const sealType = document.getElementById('seal-type').value;
 
     const width = parseFloat(widthInput.value);
     const height = parseFloat(heightInput.value);
@@ -136,24 +134,19 @@ function addDoor(type) {
 function copyTable() {
     const resultContainer = document.getElementById('result-container');
     const totalPerimeter = document.getElementById('total-perimeter').textContent;
+    const rows = resultContainer.querySelectorAll('.table-row');
     const windowType = document.getElementById('window-type').value;
     const hardwareType = document.getElementById('hardware-type').value;
     const sealType = document.getElementById('seal-type').value;
-    const rows = resultContainer.querySelectorAll('.table-row');
-    let copyText = '';
 
-    // Determine service type based on window type
-    const serviceType = windowType === 'plastic' ? 'PLAST' : 'DŘEVO';
-
-    // Add header with serviceType, hardwareType, and sealType
-    copyText += `servis ${serviceType}. Typ kování - ${hardwareType}. Typ těsnění - ${sealType}\n`;
+    let copyText = `servis ${windowType === 'plastic' ? 'PLAST' : 'DŘEVO'}. Typ kování - ${hardwareType}. Typ těsnění - ${sealType}\n\n`;
 
     let lastType = null;
-    rows.forEach((row, index) => {
+    rows.forEach(row => {
         const type = row.getAttribute('data-type');
         if (type && type !== lastType) {
-            if (index !== 0) {
-                copyText += '\n'; // Add newline between different segments
+            if (lastType) {
+                copyText += '\n'; // Add newline for separation between sections
             }
             copyText += `${type}\n`;
             lastType = type;
@@ -178,3 +171,9 @@ function copyTable() {
     }
     document.body.removeChild(textarea);
 }
+
+// Prevent accidental page refresh or navigation
+window.addEventListener('beforeunload', function (e) {
+    e.preventDefault();
+    e.returnValue = '';
+});
