@@ -8,9 +8,6 @@
 </head>
 <body>
     <div class="container">
-        <h1>Výpočet obvodu rámu oken</h1>
-        
-        <!-- Inputs for width, height, and window type -->
         <div class="input-group">
             <label for="width">Šířka (cm):</label>
             <input type="number" id="width">
@@ -26,8 +23,6 @@
                 <option value="wood">Dřevěná okna</option>
             </select>
         </div>
-        
-        <!-- New dropdown for "Typ kování" -->
         <div class="input-group">
             <label for="hardware-type">Typ kování:</label>
             <select id="hardware-type">
@@ -38,8 +33,6 @@
                 <option value="doplnit">doplnit</option>
             </select>
         </div>
-        
-        <!-- New dropdown for "Typ těsnění" -->
         <div class="input-group">
             <label for="seal-type">Typ těsnění:</label>
             <select id="seal-type">
@@ -51,28 +44,18 @@
                 <option value="Hnědé nalepené">Hnědé nalepené</option>
             </select>
         </div>
-        
-        <!-- Buttons to add different types of doors/windows -->
         <button id="add-window">Přidat okno</button>
         <button id="add-balcony">Přidat balkónové dveře</button>
         <button id="add-sliding">Přidat posuvné dveře</button>
         <button id="add-entrance">Přidat vchodové dveře</button>
-        
-        <!-- Button to copy the table -->
         <button id="copy-table">Kopírovat tabulku</button>
-        
-        <!-- Container for dynamically added rows -->
         <div id="result-container">
             <!-- Tabulka bude přidána dynamicky -->
         </div>
-        
-        <!-- Container for total perimeter -->
         <div id="total-container">
             <strong>Dohromady:</strong> <span id="total-perimeter">0m</span>
         </div>
     </div>
-    
-    <!-- Link to external JavaScript file -->
     <script src="script.js"></script>
 </body>
 </html>

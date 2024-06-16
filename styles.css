@@ -17,6 +17,28 @@ label {
     margin-right: 10px;
 }
 
+input[type="number"] {
+    height: 2.5em; /* Zvýšení výšky vstupních polí */
+    font-size: 1.2em; /* Zvětšení textu ve vstupních polích */
+}
+
+select {
+    height: 2.5em; /* Zvýšení výšky rozbalovacích nabídek */
+    font-size: 1.2em; /* Zvětšení textu v rozbalovacích nabídkách */
+}
+
+button {
+    padding: 10px 15px; /* Zvýšení výšky tlačítek */
+    font-size: 1.2em; /* Zvětšení textu v tlačítkách */
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
 #result-container {
     text-align: left;
     margin-top: 20px;
@@ -36,17 +58,6 @@ label {
 .table-row span,
 .table-row button {
     margin-left: 10px;
-}
-
-button {
-    padding: 5px 10px;
-    margin-top: 10px;
-    cursor: pointer;
-}
-
-button:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
 }
 
 #copy-table {
