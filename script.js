@@ -102,11 +102,21 @@ function addDoor(type) {
         totalContainer.textContent = `${total.toFixed(1)}m`;
     }
 
+    function updateHeaderCount() {
+        const header = document.getElementById(`${type}-header`);
+        let count = 0;
+        resultContainer.querySelectorAll(`.table-row[data-type="${type}"] .count`).forEach(function(el) {
+            count += parseInt(el.textContent);
+        });
+        header.textContent = `${type} (${count}x)`;
+    }
+
     increaseButton.addEventListener('click', function() {
         const currentCount = parseInt(countElement.textContent);
         countElement.textContent = `${currentCount + 1}x`;
         updateRow(currentCount + 1);
         updateTotal();
+        updateHeaderCount();
     });
 
     decreaseButton.addEventListener('click', function() {
@@ -115,10 +125,12 @@ function addDoor(type) {
             countElement.textContent = `${currentCount - 1}x`;
             updateRow(currentCount - 1);
             updateTotal();
+            updateHeaderCount();
         } else if (currentCount === 1) {
             if (confirm('Opravdu chcete odstranit tento řádek?')) {
                 resultContainer.removeChild(newRow);
                 updateTotal();
+                updateHeaderCount();
             }
         }
     });
@@ -128,6 +140,7 @@ function addDoor(type) {
     }
 
     updateTotal();
+    updateHeaderCount();
 }
 
 // Function to copy table
@@ -142,13 +155,26 @@ function copyTable() {
     let copyText = `servis ${windowType === 'plastic' ? 'PLAST' : 'DŘEVO'}. Typ kování - ${hardwareType}. Typ těsnění - ${sealType}\n\n`;
 
     let lastType = null;
+    const typeCounts = {};
+
+    rows.forEach(row => {
+        const type = row.getAttribute('data-type');
+        if (type) {
+            if (!typeCounts[type]) {
+                typeCounts[type] = 0;
+            }
+            const rowCount = parseInt(row.querySelector('.count').textContent);
+            typeCounts[type] += rowCount;
+        }
+    });
+
     rows.forEach(row => {
         const type = row.getAttribute('data-type');
         if (type && type !== lastType) {
             if (lastType) {
                 copyText += '\n'; // Add newline for separation between sections
             }
-            copyText += `${type}\n`;
+            copyText += `${type} (${typeCounts[type]}x)\n`;
             lastType = type;
         }
         const dimensions = row.querySelector('.dimensions').textContent.trim();
@@ -157,6 +183,7 @@ function copyTable() {
         const totalPerimeter = row.querySelector('.total-perimeter').textContent.trim();
         copyText += ` ${dimensions} ${count} ${perimeter} (${totalPerimeter})\n`;
     });
+
     copyText += `\nDohromady ${totalPerimeter}`;
 
     const textarea = document.createElement('textarea');
