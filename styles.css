@@ -3,75 +3,82 @@ body {
 }
 
 .container {
+    width: 90%;
     max-width: 800px;
-    margin: 0 auto;
+    margin: auto;
     padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.input-group {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    margin: 10px 0;
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
 }
 
-.input-group label {
-    margin: 10px;
+.form-group {
+    margin-bottom: 15px;
 }
 
-input[type="number"], select {
-    width: calc(33.33% - 20px);
+label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+input, select, button {
+    width: 100%;
     padding: 10px;
-    font-size: 16px;
-    margin: 10px;
-}
-
-#width, #height {
-    width: calc(50% - 20px);
+    margin-top: 5px;
+    box-sizing: border-box;
 }
 
 button {
-    padding: 15px 20px;
-    font-size: 16px;
-    margin: 10px 5px;
+    width: auto;
+    margin-right: 5px;
     cursor: pointer;
 }
 
-button:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-}
-
 #result-container {
-    text-align: left;
     margin-top: 20px;
-}
-
-#table-header {
-    font-weight: bold;
-    margin-bottom: 10px;
 }
 
 .table-row {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 5px;
+    align-items: center;
+    border-bottom: 1px solid #ddd;
+    padding: 10px 0;
 }
 
-.table-row span,
+.table-row .dimensions,
+.table-row .count,
+.table-row .perimeter,
+.table-row .total-perimeter,
 .table-row button {
     margin-left: 10px;
+    white-space: nowrap;
 }
 
-#copy-table {
+#total-perimeter-container {
     margin-top: 20px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
+    font-size: 1.2em;
+    text-align: right;
 }
 
-#total-container {
-    margin-top: 20px;
-    font-weight: bold;
-    text-align: left;
+@media (max-width: 600px) {
+    .table-row {
+        flex-wrap: wrap;
+    }
+
+    .table-row .dimensions,
+    .table-row .count,
+    .table-row .perimeter,
+    .table-row .total-perimeter,
+    .table-row button {
+        flex: 1 1 auto;
+        margin-left: 0;
+    }
+
+    .table-row button {
+        width: 48%;
+    }
 }

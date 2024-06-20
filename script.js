@@ -72,13 +72,17 @@ function addDoor(type) {
         <div class="dimensions">
             ${width}x${height}
         </div>
-        <div class="details">
-            <span class="count">1x</span> 
-            <span class="perimeter">${perimeter.toFixed(1)}m</span> 
-            (<span class="total-perimeter">${perimeter.toFixed(1)}m</span>) 
-            <button class="increase">+</button> 
-            <button class="decrease">-</button>
+        <div class="count">
+            1x
         </div>
+        <div class="perimeter">
+            ${perimeter.toFixed(1)}m
+        </div>
+        <div class="total-perimeter">
+            (${perimeter.toFixed(1)}m)
+        </div>
+        <button class="increase">+</button>
+        <button class="decrease">-</button>
     `;
 
     // Insert new row after the last row of this type
@@ -96,111 +100,82 @@ function addDoor(type) {
 
     function updateTotal() {
         let total = 0;
-        resultContainer.querySelectorAll('.total-perimeter').forEach(function(el) {
-            total += parseFloat(el.textContent);
+        resultContainer.querySelectorAll('.total-perimeter').forEach(function(element) {
+            const value = parseFloat(element.textContent.replace(/[^\d.-]/g, ''));
+            total += value;
         });
         totalContainer.textContent = `${total.toFixed(1)}m`;
     }
 
     function updateHeaderCount() {
         const header = document.getElementById(`${type}-header`);
-        let count = 0;
-        resultContainer.querySelectorAll(`.table-row[data-type="${type}"] .count`).forEach(function(el) {
-            count += parseInt(el.textContent);
-        });
-        header.textContent = `${type} (${count}x)`;
+        if (header) {
+            const rowsOfType = resultContainer.querySelectorAll(`.table-row[data-type="${type}"]`);
+            let totalCount = 0;
+            rowsOfType.forEach(function(row) {
+                const countEl = row.querySelector('.count');
+                totalCount += parseInt(countEl.textContent);
+            });
+            header.textContent = `${type} (${totalCount}x)`;
+        }
     }
 
     increaseButton.addEventListener('click', function() {
-        const currentCount = parseInt(countElement.textContent);
-        countElement.textContent = `${currentCount + 1}x`;
-        updateRow(currentCount + 1);
+        let count = parseInt(countElement.textContent);
+        count++;
+        countElement.textContent = `${count}x`;
+        totalPerimeterElement.textContent = `(${(count * perimeter).toFixed(1)}m)`;
         updateTotal();
         updateHeaderCount();
     });
 
     decreaseButton.addEventListener('click', function() {
-        const currentCount = parseInt(countElement.textContent);
-        if (currentCount > 1) {
-            countElement.textContent = `${currentCount - 1}x`;
-            updateRow(currentCount - 1);
+        let count = parseInt(countElement.textContent);
+        if (count > 1) {
+            count--;
+            countElement.textContent = `${count}x`;
+            totalPerimeterElement.textContent = `(${(count * perimeter).toFixed(1)}m)`;
             updateTotal();
             updateHeaderCount();
-        } else if (currentCount === 1) {
-            if (confirm('Opravdu chcete odstranit tento řádek?')) {
-                resultContainer.removeChild(newRow);
-                updateTotal();
-                updateHeaderCount();
-            }
         }
     });
-
-    function updateRow(count) {
-        totalPerimeterElement.textContent = `${(perimeter * count).toFixed(1)}m`;
-    }
 
     updateTotal();
     updateHeaderCount();
 }
 
-// Function to copy table
+// Function to copy the table
 function copyTable() {
-    const resultContainer = document.getElementById('result-container');
-    const totalPerimeter = document.getElementById('total-perimeter').textContent;
-    const rows = resultContainer.querySelectorAll('.table-row');
-    const windowType = document.getElementById('window-type').value;
+    const windowType = document.getElementById('window-type').value === 'plastic' ? 'PLAST' : 'DŘEVO';
     const hardwareType = document.getElementById('hardware-type').value;
     const sealType = document.getElementById('seal-type').value;
 
-    let copyText = `servis ${windowType === 'plastic' ? 'PLAST' : 'DŘEVO'}. Typ kování - ${hardwareType}. Typ těsnění - ${sealType}\n\n`;
+    const resultContainer = document.getElementById('result-container');
+    const totalPerimeter = document.getElementById('total-perimeter').textContent;
 
-    let lastType = null;
-    const typeCounts = {};
+    let text = `servis ${windowType}. Typ kování - ${hardwareType}. Typ těsnění - ${sealType}\n\n`;
 
-    rows.forEach(row => {
-        const type = row.getAttribute('data-type');
-        if (type) {
-            if (!typeCounts[type]) {
-                typeCounts[type] = 0;
-            }
-            const rowCount = parseInt(row.querySelector('.count').textContent);
-            typeCounts[type] += rowCount;
-        }
+    const headers = resultContainer.querySelectorAll('div[id$="-header"]');
+    headers.forEach(function(header) {
+        text += `${header.textContent}\n`;
+
+        const rows = resultContainer.querySelectorAll(`.table-row[data-type="${header.id.split('-')[0]}"]`);
+        rows.forEach(function(row) {
+            const dimensions = row.querySelector('.dimensions').textContent.trim();
+            const count = row.querySelector('.count').textContent.trim();
+            const perimeter = row.querySelector('.perimeter').textContent.trim();
+            const totalPerimeter = row.querySelector('.total-perimeter').textContent.trim();
+            text += ` ${dimensions}   ${count}   ${perimeter}   ${totalPerimeter}\n`;
+        });
+
+        text += '\n';
     });
 
-    rows.forEach(row => {
-        const type = row.getAttribute('data-type');
-        if (type && type !== lastType) {
-            if (lastType) {
-                copyText += '\n'; // Add newline for separation between sections
-            }
-            copyText += `${type} (${typeCounts[type]}x)\n`;
-            lastType = type;
-        }
-        const dimensions = row.querySelector('.dimensions').textContent.trim();
-        const count = row.querySelector('.count').textContent.trim();
-        const perimeter = row.querySelector('.perimeter').textContent.trim();
-        const totalPerimeter = row.querySelector('.total-perimeter').textContent.trim();
-        copyText += ` ${dimensions} ${count} ${perimeter} (${totalPerimeter})\n`;
-    });
+    text += `Dohromady: ${totalPerimeter}`;
 
-    copyText += `\nDohromady ${totalPerimeter}`;
-
-    const textarea = document.createElement('textarea');
-    textarea.value = copyText;
-    document.body.appendChild(textarea);
-    textarea.select();
-    try {
-        document.execCommand('copy');
+    navigator.clipboard.writeText(text).then(function() {
         alert('Tabulka byla zkopírována do schránky.');
-    } catch (err) {
-        alert('Kopírování se nezdařilo. Zkuste to znovu.');
-    }
-    document.body.removeChild(textarea);
+    }, function(err) {
+        console.error('Could not copy text: ', err);
+    });
 }
-
-// Prevent accidental page refresh or navigation
-window.addEventListener('beforeunload', function (e) {
-    e.preventDefault();
-    e.returnValue = '';
-});
