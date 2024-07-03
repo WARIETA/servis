@@ -3,20 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Servis Okna</title>
+    <title>Výpočet obvodů</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
-        <h1>Servis Okna</h1>
-        <div class="form-group">
+        <h1>Výpočet obvodů</h1>
+
+        <div class="input-group">
             <label for="window-type">Typ okna:</label>
             <select id="window-type">
-                <option value="plastic">PLAST</option>
-                <option value="wood">DŘEVO</option>
+                <option value="plastic">Plastové</option>
+                <option value="wood">Dřevěné</option>
             </select>
         </div>
-        <div class="form-group">
+
+        <div class="input-group">
             <label for="hardware-type">Typ kování:</label>
             <select id="hardware-type">
                 <option value="ROTO">ROTO</option>
@@ -27,37 +29,53 @@
                 <option value="doplnit">doplnit</option>
             </select>
         </div>
-        <div class="form-group">
+
+        <div class="input-group">
             <label for="seal-type">Typ těsnění:</label>
             <select id="seal-type">
-                <option value="Černé Nenalepené">Černé Nenalepené</option>
-                <option value="Černé Nalepené">Černé Nalepené</option>
-                <option value="Šedé Nenalepené">Šedé Nenalepené</option>
-                <option value="Šedé Nalepené">Šedé Nalepené</option>
+                <option value="černé nenalepené">černé nenalepené</option>
+                <option value="černé nalepené">černé nalepené</option>
+                <option value="šedé nenalepené">šedé nenalepené</option>
+                <option value="šedé nalepené">šedé nalepené</option>
+                <option value="hnědé nenalepené">hnědé nenalepené</option>
+                <option value="hnědé nalepené">hnědé nalepené</option>
             </select>
         </div>
-        <div class="form-group">
+
+        <div class="input-group">
             <label for="width">Šířka (cm):</label>
-            <input type="number" id="width" placeholder="Zadejte šířku">
+            <input type="number" id="width">
         </div>
-        <div class="form-group">
+
+        <div class="input-group">
             <label for="height">Výška (cm):</label>
-            <input type="number" id="height" placeholder="Zadejte výšku">
+            <input type="number" id="height">
         </div>
-        <div class="form-group">
-            <button id="add-window">Přidat Okno</button>
-            <button id="add-balcony">Přidat Balkónové dveře</button>
-            <button id="add-sliding">Přidat Posuvné dveře</button>
-            <button id="add-entrance">Přidat Vchodové dveře</button>
+
+        <div class="button-group">
+            <button id="add-window">Přidat okno</button>
+            <button id="add-balcony">Přidat balkon</button>
+            <button id="add-sliding">Přidat posuvné</button>
+            <button id="add-entrance">Přidat vchodovky</button>
         </div>
+
         <div id="result-container"></div>
-        <div id="total-perimeter-container">
-            <strong>Dohromady:</strong> <span id="total-perimeter">0m</span>
+
+        <div class="total-container">
+            <strong>Dohromady:</strong>
+            <span id="total-perimeter">0m</span>
         </div>
-        <div class="form-group">
+
+        <div class="button-group">
             <button id="copy-table">Kopírovat tabulku</button>
         </div>
+
+        <footer>
+            <p>S láskou ke svému volnému času a času svých kolegů. #automatizace #efektivita</p>
+            <p>Tomáš VARIETA Dobřichovský</p>
+        </footer>
     </div>
+
     <script src="script.js"></script>
 </body>
 </html>
