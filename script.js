@@ -1,4 +1,3 @@
-// Event listeners for adding doors
 document.getElementById('add-window').addEventListener('click', function() {
     addDoor('Okno');
 });
@@ -19,7 +18,6 @@ document.getElementById('copy-table').addEventListener('click', function() {
     copyTable();
 });
 
-// Function to add a door with specified type
 function addDoor(type) {
     const widthInput = document.getElementById('width');
     const heightInput = document.getElementById('height');
@@ -35,7 +33,7 @@ function addDoor(type) {
 
     let perimeter;
     if (windowType === 'plastic') {
-        perimeter = 2 * (width + height) / 100;
+        perimeter = 2 * 2 * (width + height) / 100; // Dvojnásobný obvod pro plastová okna
     } else if (windowType === 'wood') {
         perimeter = 2 * (width + height) / 100;
     }
@@ -43,11 +41,9 @@ function addDoor(type) {
     const resultContainer = document.getElementById('result-container');
     const totalContainer = document.getElementById('total-perimeter');
 
-    // Clear input fields
     widthInput.value = '';
     heightInput.value = '';
 
-    // Check if header exists for the type
     let tableHeader = document.getElementById(`${type}-header`);
     if (!tableHeader) {
         tableHeader = document.createElement('div');
@@ -56,7 +52,6 @@ function addDoor(type) {
         resultContainer.appendChild(tableHeader);
     }
 
-    // Find the last row of this type to insert after
     let lastRowOfType = null;
     const rows = resultContainer.querySelectorAll('.table-row');
     rows.forEach(row => {
@@ -77,7 +72,6 @@ function addDoor(type) {
         <button class="decrease">-</button>
     `;
 
-    // Insert new row after the last row of this type
     if (lastRowOfType) {
         lastRowOfType.parentNode.insertBefore(newRow, lastRowOfType.nextSibling);
     } else {
@@ -140,7 +134,6 @@ function addDoor(type) {
     updateHeaderCount();
 }
 
-// Function to copy the table
 function copyTable() {
     const windowType = document.getElementById('window-type').value === 'plastic' ? 'PLAST' : 'DŘEVO';
     const hardwareType = document.getElementById('hardware-type').value;
@@ -189,7 +182,6 @@ function copyTable() {
     });
 }
 
-// Prevent accidental page reload
 window.addEventListener('beforeunload', function(event) {
     event.preventDefault();
     event.returnValue = '';
